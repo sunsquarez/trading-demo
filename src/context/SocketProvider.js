@@ -52,7 +52,7 @@ export const SocketProvider = ({
     socket.send(requestData);
   }, []);
 
-  const subscribeChannel = useCallback((channel, symbol) => {
+  const subscribeChannel = useCallback((channel, symbol, prec) => {
     if (currentChannel[channel]) {
       unsubscribeChannel(channel);
     }
@@ -61,6 +61,7 @@ export const SocketProvider = ({
       event: 'subscribe',
       channel,
       symbol,
+      prec,
     });
 
     socket.send(requestData);

@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import Container from '@material-ui/core/Container';
 import ConnectSwitcher from './components/ConnectSwitcher';
 import SymbolSelector from './components/SymbolSelector';
+import PrecisionSelector from './components/PrecisionSelector';
 import Ticker from './components/Ticker';
 import OrderBook from './components/OrderBook';
 import { SocketContext } from './context/SocketProvider';
@@ -10,6 +11,7 @@ import Channel from './config/Channel';
 
 const App = () => {
   const symbol = useSelector((state) => state.app?.symbol);
+  const precision = useSelector((state) => state.orderBook?.precision);
 
   const {
     isSocketConnected,
@@ -20,7 +22,7 @@ const App = () => {
   useEffect(() => {
     if (isSocketConnected) {
       subscribeChannel(Channel.TICKER, symbol);
-      subscribeChannel(Channel.BOOK, symbol);
+      subscribeChannel(Channel.BOOK, symbol, precision);
     }
 
     return () => {
@@ -34,6 +36,7 @@ const App = () => {
     subscribeChannel,
     unsubscribeChannel,
     symbol,
+    precision,
   ]);
 
   return (
@@ -48,7 +51,10 @@ const App = () => {
           <Ticker />
         </section>
         <section style={{ marginBottom: '2rem' }}>
-          <h2>ORDER BOOK</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h2>ORDER BOOK</h2>
+            <PrecisionSelector />
+          </div>
           <OrderBook />
         </section>
       </Container>
